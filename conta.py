@@ -1,3 +1,5 @@
+import numpy as np
+
 nos=[]
 ligas=[]
 forcas=[]
@@ -6,6 +8,7 @@ def main():
     escolha=menu()
     adiciona(escolha,nos,ligas)
     print(nos)
+
 
 def menu():
     print("Para adicionar nós digite 1","\nPara ligar os nós digite 2","\nPara adicionar forças digite 3",
@@ -50,9 +53,13 @@ def adiciona(escolha,nos,ligas):
             main()
     if escolha=="3":
         while continuar=="1":
-            n,f=input("Escolha o nó que deseja aplicar a força e o seu módulo:")
-            forcas.append([n,f])
+            n,f,theta=input("Escolha o nó que deseja aplicar a força,seu módulo e seu ângulo de inclinação(em graus) com o eixo x:")
+            theta=60*(np.pi)/180
+            fx=float(f) *(np.cos(theta))
+            fy=float(f)* (np.sin(theta))
+            forcas.append([n,fx,fy])
             print(forcas)
+            print(forcas[0])
             continuar=input("Para adiconar outra força digite 1")
 
     if escolha=="4":
