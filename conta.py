@@ -58,14 +58,21 @@ def adiciona(escolha,nos,ligas):
     if escolha=="3":
         while continuar=="1":
             n,f,theta=input("Escolha o nó que deseja aplicar a força,seu módulo e seu ângulo de inclinação(em graus) com o eixo x:")
-            s=input("Qual o sentido da força? (c,b)")
+            s,d=input("Qual o sentido da força e direrçao da forca? (c,b)(d,e)")
             theta=60*(np.pi)/180
-            if s=="c":
+            if s=="c" and d=="d":
                 fx=float(f) *(np.cos(theta))
+                fy=float(f) *(np.sin(theta))
+            elif s=="c" and d=="e":
+                fx=float(f) *(-np.cos(theta))
                 fy=float(f)* (np.sin(theta))
+            elif s=="b" and d=="d":
+                fx=float(f) *(np.cos(theta))
+                fy=float(f)* (-np.sin(theta))
             else:
                 fx=float(f) *(-np.cos(theta))
                 fy=float(f)* (-np.sin(theta))
+
 
             forcas.append([n,fx,fy])
             print(forcas)
