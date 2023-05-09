@@ -16,7 +16,6 @@ def menu():
           "\nPara opções de apoios digite 4","\nPara consultar as forças digite 5","\nPara sair digite 6")
     escolha=input("=> ")
     if escolha=="5":
-        print("ola")
         calculo()
     return escolha
 
@@ -86,17 +85,23 @@ def adiciona(escolha,nos,ligas):
 
     if escolha=="4":
         while continuar=="1":
-            a=input("Esolha o tipo de apoio que deseja adicionar: \nApoio móvel\nApoio fixo\nEngastamento\n")
-            apoios.append(a)
+            a=int(input("Esolha o tipo de apoio que deseja adicionar : \n1-Apoio móvel\n2-Apoio fixo\n3-Engastamento\n"))
+            n=input("Em que nó ele se encontra?")
+            apoios.append([n,a])
             print(apoios)
             main()
 
     if escolha =="6":
-        print("\n\nFeito por Tiago Oliveira Dallecio, Mauricio Lasca Gonçalves e Murilo Alves Croce\nEngenharia De Computação\nPUC-Campinas 2023\n\n")
+        print("\n\nFeito por Tiago Oliveira Dallecio, Mauricio Lasca Gonçales e Murilo Alves Croce\nEngenharia De Computação\nPUC-Campinas 2023\n\n")
         return 0
 def calculo():
     fx=0
     fy=0
+    coord=[]
+    dist=[]
+    vet=[]
+    nó=0
+   
     for i,n in enumerate(nos):    
         for f in forcas:
             if int(f[0])==i+1:
@@ -104,6 +109,33 @@ def calculo():
                 fy=fy+f[2]
             
         fr.append([i+1,fx,fy])
+    for ap in apoios:
+        vet.append(ap[1])
+    
+    ap=max(vet, key=int)    #maior numero de variaveis entre os apoios
+    for a in apoios:
+        if a[1]==ap:
+            nó=a[0]
+    for i,n in enumerate(nos):
+        for f in forcas:
+            if int(f[0])==i+1:
+                coord.append(n)
+        if i+1==nó:
+            nó=n        #coloca as coordenadas do nó na variável nó
+    print(coord)
+    print(nó)
+    
+                        #resolver questão do módulo
+
+
+
+        
+    for c in coord:
+        x=int(c[0])-int(nó[0])
+        y=int(c[1])-int(nó[1])
+        dist.append([x,y])
+        
+    print(dist)        
     print(fr)
     main()
             
