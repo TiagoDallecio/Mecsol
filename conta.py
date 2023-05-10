@@ -101,6 +101,7 @@ def calculo():
     dist=[]
     vet=[]
     nó=0
+    momento=0
    
     for i,n in enumerate(nos):    
         for f in forcas:
@@ -114,26 +115,35 @@ def calculo():
     
     ap=max(vet, key=int)    #maior numero de variaveis entre os apoios
     for a in apoios:
-        if a[1]==ap:
+        if a[1]==ap:                #momento é um produto vetorial
             nó=a[0]
+
     for i,n in enumerate(nos):
+        if i+1==int(nó):             #coloca as coordenadas do nó na variável nó
+            coordnó=n 
+        
         for f in forcas:
             if int(f[0])==i+1:
                 coord.append(n)
-        if i+1==nó:
-            nó=n        #coloca as coordenadas do nó na variável nó
+               
     print(coord)
-    print(nó)
+    print(coordnó)
     
                         #resolver questão do módulo
-
-
-
-        
-    for c in coord:
-        x=int(c[0])-int(nó[0])
-        y=int(c[1])-int(nó[1])
+      
+    for c in coord:         #achando as distâncias das forças com o apoio
+        x=int(c[0])-int(coordnó[0])
+        y=int(c[1])-int(coordnó[1])
         dist.append([x,y])
+
+    for i,f in enumerate(forcas):
+        m=[]
+        m.append(f[1])
+        m.append(f[2])
+        momento=momento+np.cross(m,dist[i])
+    
+    print(momento)
+
         
     print(dist)        
     print(fr)
