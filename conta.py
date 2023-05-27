@@ -140,10 +140,17 @@ def calculo():
         sen=np.sin(l[2])
 
 
+         #força x
         matriz_focas[2*no_i, 2*i] = cos
         matriz_focas[2*no_i, 2*i + 1] = sen
+        #força y
+        matriz_focas[2*no_i+1, 2*i] = -sen
+        matriz_focas[2*no_i+1, 2*i + 1] = cos
+        #força x nof
         matriz_focas[2*no_f, 2*i] = -cos
         matriz_focas[2*no_f, 2*i + 1] = -sen
+
+
 
         solucao=np.linalg.solve(matriz_focas, vetor_carga_nos)
 
