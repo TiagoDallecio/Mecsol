@@ -4,19 +4,18 @@ nos=[]
 ligas=[]
 forcas=[]
 apoios=[]
-fr=[]
-def main(): 
+fr=[]    
+def main():
     escolha=menu()
+    if escolha=="5":
+        calculo()
     adiciona(escolha,nos,ligas)
-
 
 
 def menu():
     print("Para adicionar nós digite 1","\nPara ligar os nós existentes digite 2","\nPara adicionar forças digite 3",
           "\nPara opções de apoios digite 4","\nPara consultar as forças digite 5","\nPara sair digite 6")
     escolha=input("=> ")
-    if escolha=="5":
-        calculo()
     return escolha
 
 def adiciona(escolha,nos,ligas):
@@ -29,7 +28,7 @@ def adiciona(escolha,nos,ligas):
             print('coordenada x:',x)
             print('coordenada y:',y)
             nos.append([x,y])
-            
+           
             print(nos)
             for v in enumerate(nos) :
                 print(v)
@@ -39,20 +38,27 @@ def adiciona(escolha,nos,ligas):
     if escolha == "2" and len(nos) > 1:
         n1 = []
         n2 = []
+        barra=[]
         while continuar == "1":
-            print(nos)
+            print(nos)  
             h1, h2 = input("Digite os nós que deseja conectar, na ordem => ")
-            h1, h2 = int(h1), int(h2)
+            h1, h2 = int(h1), int(h2) 
             for i, v in enumerate(nos):
                 if i == h1 - 1:
-                   n1.append(nos[0])
+                    n1.append(nos[i])
                 if i == h2 - 1:
-                    n2.append(nos[1])   
+                    n2.append(nos[i])
+            if float(n2[0][0])-float(n1[0][0])!=0:
+                tg=(float(n2[0][1])-float(n1[0][1]))/(float(n2[0][0])-float(n1[0][0]))
+                ang=np.arctan(tg)
+            else:
+                ang=np.pi/2
+            barra=[h1-1,h2-1,ang]
+            print((ang*180)/np.pi)
             print(n1, n2)
             viga = np.sqrt((float(n2[0][0])-float(n1[0][0]))**2 + (float(n2[0][1])-float(n1[0][1]))**2)
-         
-            ligas.append([n1, n2])
-            print(f'{ligas}')
+            ligas.append(barra)     #matriz das barras
+            print(ligas)
 
             print(f"Tamanho da viga gerada: {viga}")
             main()
@@ -62,7 +68,7 @@ def adiciona(escolha,nos,ligas):
         while continuar=="1":
             n,f,theta=input("Escolha o nó em que deseja aplicar a força, módulo da mesma e seu ângulo de inclinação(em graus) com o eixo x: ") #ver com o mauritz
             s,d=input("Qual a direção e o sentido da força? (v,h)(c,b,d,e)")
-            theta=60*(np.pi)/180
+            theta=float(theta)*(np.pi)/180
             if d=="c" and s=="d":
                 fx=float(f) *(np.cos(theta))
                 fy=float(f) *(np.sin(theta))
@@ -102,22 +108,58 @@ def calculo():
     vet=[]
     nó=0
     momento=0
-   
+    countx=0
+    county=0
     for i,n in enumerate(nos):    
         for f in forcas:
-            if int(f[0])==i+1:
+            if int(f[0])==i+1 and isinstance(f[1], float):
                 fx=fx+f[1]
-                fy=fy+f[2]
-            
-        fr.append([i+1,fx,fy])
+                fy=fy+f[2]  #resultante das forças
+        
+        fr.append([i,fx,fy])
+        fx=0
+        fy=0
+    num_nos=len(nos)
+    matriz_focas=np.zeros((2*num_nos,2*num_nos))
+    vetor_carga_nos=np.zeros(2*num_nos)
+    
+    for no,modulo in enumerate(nos):
+        for f in fr:
+            if int(f[0])==no and f[1] is not None :
+                vetor_carga_nos[2*no]=f[1]
+                matriz_focas[2*no,2*no]=1
+
+            if int(f[0])==no and f[2] is not None:
+                vetor_carga_nos[2*no+1]=f[1]
+                matriz_focas[2*no+1,2*no+1]=1
+    
+    for i,l in enumerate(ligas):
+        no_i=l[0]
+        no_f=l[1]
+        cos=np.cos(l[2])
+        sen=np.sin(l[2])
+
+
+        matriz_focas[2*no_i, 2*i] = cos
+        matriz_focas[2*no_i, 2*i + 1] = sen
+        matriz_focas[2*no_f, 2*i] = -cos
+        matriz_focas[2*no_f, 2*i + 1] = -sen
+
+        solucao=np.linalg.solve(matriz_focas, vetor_carga_nos)
+
+        print(vetor_carga_nos)
+        print(matriz_focas)
+        print(solucao)
+    
+    """ 
     for ap in apoios:
         vet.append(ap[1])
-    
+    print(fr)
     ap=max(vet, key=int)    #maior numero de variaveis entre os apoios
     for a in apoios:
         if a[1]==ap:                #momento é um produto vetorial
             nó=a[0]
-
+    """
     for i,n in enumerate(nos):
         if i+1==int(nó):             #coloca as coordenadas do nó na variável nó
             coordnó=n 
@@ -136,8 +178,8 @@ def calculo():
         y=int(c[1])-int(coordnó[1])
         dist.append([x,y])
 
-    for i,f in enumerate(forcas):
-        m=[]
+    for i,f in enumerate(forcas):   #componente da força no vetor m                           
+        m=[]                        #produto vetorial do vetor das forças com o vetor das distâncias
         m.append(f[1])
         m.append(f[2])
         momento=momento+np.cross(m,dist[i])
