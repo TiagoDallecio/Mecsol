@@ -24,7 +24,8 @@ def adiciona(escolha,nos,ligas):
         i=0
         while continuar=='1':
             i+=1
-            x,y=input(f"Digite as coordenadas do nó {i} => ")
+            x=input(f"Digite a coordenadas 'x' do nó {i} => ")
+            y=input(f"Digite a coordenadas 'y' do nó {i} => ")
             print('coordenada x:',x)
             print('coordenada y:',y)
             nos.append([x,y])
@@ -66,7 +67,9 @@ def adiciona(escolha,nos,ligas):
         print("É preciso ter, no mínimo, 2 nós para usar essa opção")
     if escolha=="3":
         while continuar=="1":
-            n,f,theta=input("Escolha o nó em que deseja aplicar a força, módulo da mesma e seu ângulo de inclinação(em graus) com o eixo x: ") #ver com o mauritz
+            n=input("Escolha o nó em que deseja aplicar a força ") #ver com o mauritz
+            f=input("Módulo da força")
+            theta=input("Ângulo de inclinação(em graus) da força com o eixo x: ")
             s,d=input("Qual a direção e o sentido da força? (v,h)(c,b,d,e)")
             theta=float(theta)*(np.pi)/180
             if d=="c" and s=="d":
@@ -130,7 +133,7 @@ def calculo():
                 matriz_focas[2*no,2*no]=1
 
             if int(f[0])==no and f[2] is not None:
-                vetor_carga_nos[2*no+1]=f[1]
+                vetor_carga_nos[2*no+1]=f[2]
                 matriz_focas[2*no+1,2*no+1]=1
     
     for i,l in enumerate(ligas):
@@ -139,24 +142,26 @@ def calculo():
         cos=np.cos(l[2])
         sen=np.sin(l[2])
 
-
+        #considerando que o eixo x segue a orientação da barra
          #força x
         matriz_focas[2*no_i, 2*i] = cos
         matriz_focas[2*no_i, 2*i + 1] = sen
-        #força y
-        matriz_focas[2*no_i+1, 2*i] = -sen
-        matriz_focas[2*no_i+1, 2*i + 1] = cos
         #força x nof
         matriz_focas[2*no_f, 2*i] = -cos
         matriz_focas[2*no_f, 2*i + 1] = -sen
 
+        #ainda nao da certo
 
 
         solucao=np.linalg.solve(matriz_focas, vetor_carga_nos)
-
-        print(vetor_carga_nos)
         print(matriz_focas)
         print(solucao)
+        
+    forcas_barras = solucao[:2*num_nos]
+    print(vetor_carga_nos)
+    print(matriz_focas)
+    print(solucao)
+    print(forcas_barras)
     
     """ 
     for ap in apoios:
