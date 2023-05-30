@@ -123,45 +123,50 @@ def calculo():
         fx=0
         fy=0
     num_nos=len(nos)
-    matriz_focas=np.zeros((2*num_nos,2*num_nos))
-    vetor_carga_nos=np.zeros(2*num_nos)
+    num_barras=len(ligas)
+    if num_nos>num_barras:
+        matriz_focas=np.zeros((2*num_nos,2*num_nos))
+        vetor_carga_nos=np.zeros(2*num_nos)
     
-    for no,modulo in enumerate(nos):
-        for f in fr:
-            if int(f[0])==no and f[1] is not None :
-                vetor_carga_nos[2*no]=f[1]
-                matriz_focas[2*no,2*no]=1
+        for no,modulo in enumerate(nos):
+            for f in fr:
+                if int(f[0])==no and f[1] is not None :
+                    vetor_carga_nos[2*no]=f[1]
+                    matriz_focas[2*no,2*no]=1
 
-            if int(f[0])==no and f[2] is not None:
-                vetor_carga_nos[2*no+1]=f[2]
-                matriz_focas[2*no+1,2*no+1]=1
+                if int(f[0])==no and f[2] is not None:
+                    vetor_carga_nos[2*no+1]=f[2]
+                    matriz_focas[2*no+1,2*no+1]=1
     
-    for i,l in enumerate(ligas):
-        no_i=l[0]
-        no_f=l[1]
-        cos=np.cos(l[2])
-        sen=np.sin(l[2])
+        for i,l in enumerate(ligas):
+            no_i=l[0]
+            no_f=l[1]
+            cos=np.cos(l[2])
+            sen=np.sin(l[2])
 
-        #considerando que o eixo x segue a orientação da barra
-         #força x
-        matriz_focas[2*no_i, 2*i] = cos
-        matriz_focas[2*no_i, 2*i + 1] = sen
-        #força x nof
-        matriz_focas[2*no_f, 2*i] = -cos
-        matriz_focas[2*no_f, 2*i + 1] = -sen
+            #considerando que o eixo x segue a orientação da barra
+            #força x
+            matriz_focas[2*no_i, 2*i] = cos
+            matriz_focas[2*no_i, 2*i + 1] = sen
+            #força x nof
+            matriz_focas[2*no_f, 2*i] = -cos
+            matriz_focas[2*no_f, 2*i + 1] = -sen
 
-        #ainda nao da certo
+            #ainda nao da certo
 
 
-        solucao=np.linalg.solve(matriz_focas, vetor_carga_nos)
+            solucao=np.linalg.solve(matriz_focas, vetor_carga_nos)
+            print(matriz_focas)
+            print(solucao)
+        
+        forcas_barras = solucao[:2*num_nos]
+        print(vetor_carga_nos)
         print(matriz_focas)
         print(solucao)
-        
-    forcas_barras = solucao[:2*num_nos]
-    print(vetor_carga_nos)
-    print(matriz_focas)
-    print(solucao)
-    print(forcas_barras)
+        print(forcas_barras)
+    else:
+        matriz_focas=np.zeros((2*num_nos,2*num_nos))
+        vetor_carga_nos=np.zeros(2*num_nos)
     
     """ 
     for ap in apoios:
