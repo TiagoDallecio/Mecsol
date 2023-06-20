@@ -20,6 +20,32 @@ def intersect(line1, line2):
         return True
     else:
         return False
+    
+def plot_result(nos, ligas, forcas):
+    for i in range(len(ligas)):
+        no_i = nos[ligas[i][0]]
+        no_f = nos[ligas[i][1]]
+        x_values = [no_i[0], no_f[0]]
+        y_values = [no_i[1], no_f[1]]
+        plt.plot(x_values, y_values, 'b-')
+
+    for i, no in enumerate(nos):
+        plt.scatter(no[0], no[1], color='r')
+        plt.text(no[0], no[1], f'N{i+1}', ha='right')
+
+    for no, (x, y) in enumerate(zip(forcas[::2], forcas[1::2]), start=1):
+        plt.text(float(nos[no-1][0]), float(nos[no-1][1]), f'({x:.2f}N, {y:.2f}N)', ha='center', va='bottom')
+
+    plt.xlabel('Coordenada X')
+    plt.ylabel('Coordenada Y')
+    plt.title('Plot da Treliça')
+    plt.grid(True)
+    plt.show()
+
+
+def plot_forcas(nos, solucao):
+    for no, (x, y) in enumerate(zip(solucao[::2], solucao[1::2]), start=1):
+        plt.text(float(nos[no-1][0]), float(nos[no-1][1]), f'({x:.2f}N, {y:.2f}N)', ha='center', va='bottom')
 
 nos=[]
 ligas=[]
@@ -30,12 +56,13 @@ nos_visitados=[]
 def main():
     escolha=menu()
     if escolha=="5":
-        calcular_forcas(nos, forcas, ligas)
+        solucao = calcular_forcas(nos, forcas, ligas)
+        plot_forcas(nos, solucao)
+        plot_result(nos, ligas, solucao)
     adiciona(escolha,nos,ligas)
 
 
 def menu(): # menu de seleção de 'operações'
-    print("\n---Exibição de treliças---\n\n")
     print("Para adicionar nós digite 1","\nPara ligar os nós existentes digite 2","\nPara adicionar forças digite 3",
           "\nPara opções de apoios digite 4","\nPara consultar as forças digite 5","\nPara sair digite 6")
     escolha=input("=> ")
@@ -144,12 +171,12 @@ def adiciona(escolha,nos,ligas): # função chamada pelo menu que executa a opç
         while continuar=="1":
             if len(nos) > 0: # validação da quantidade de nós presentes na lista
                 print("\nDigite 'sair' para voltar ao menu\n")
-                n=input("Escolha o nó em que deseja aplicar a força: ") 
+                n=input("Escolha o nó em que deseja aplicar a força: ") #ver com o mauritz
                 if n == 'sair':
                     break
                 f=input("Módulo da força: ")
                 theta=input("Ângulo de inclinação(em graus) da força com o eixo x: ")
-                s,d=input("Qual é o sentido da força? (d,e)(c,b): ")
+                s,d=input("Qual a direção e o sentido da força? (d,e)(c,b): ")
                 theta=float(theta)*(np.pi)/180 # conversão do angulo (graus para radianos)
                 if d=="c" and s=="d": # diferentes validações para determinar o sinal das forças
                     fx=float(f) *(np.cos(theta))
@@ -218,7 +245,7 @@ def adiciona(escolha,nos,ligas): # função chamada pelo menu que executa a opç
         main()
     
     if escolha =="6": # créditos
-        print("\n\nFeito por Tiago Oliveira Dallecio, Mauricio Lasca Gonçales e Murilo Alves Croce\nEngenharia De Computação\nPUC-Campinas 2023\n\n")
+        print("\n\nFeito por Tiago Oliveira Dallecio e Mauricio Lasca Gonçales \nEngenharia De Computação\nPUC-Campinas 2023\n\n")
         sys.exit()
 
 
@@ -273,9 +300,18 @@ def calcular_forcas(nos, forcas, ligas):
 
     for no in range(num_nos):
         forca_x = solucao[2 * no]  # Acessar o elemento correto da solução
+        if forca_x < 0:
+            estado1 = 'Compressão'
+        else:
+            estado1 = 'Tração'
         forca_y = solucao[2 * no + 1]  # Acessar o elemento correto da solução
-        print(f"No {no+1}: Força X = {forca_x}N, Força Y = {forca_y}N")
+        if forca_y < 0:
+            estado2 = 'Compressão'
+        else:
+            estado2 = 'Tração'
+        print(f"No {no+1}: Força X = {forca_x}N, {estado1}, Força Y = {forca_y}N, {estado2}")
 
+    return solucao
 '''
 
 
@@ -283,3 +319,5 @@ def calcular_forcas(nos, forcas, ligas):
 
             
 main()
+solucao = calcular_forcas(nos, forcas, ligas)
+plot_result(nos, ligas, solucao)
