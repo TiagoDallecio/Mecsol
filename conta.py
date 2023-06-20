@@ -35,7 +35,7 @@ def main():
 
 
 def menu(): # menu de seleção de 'operações'
-    print("\n---Exibição e cálculo de treliças---\n\n")
+    print("\n---Exibição de treliças---\n\n")
     print("Para adicionar nós digite 1","\nPara ligar os nós existentes digite 2","\nPara adicionar forças digite 3",
           "\nPara opções de apoios digite 4","\nPara consultar as forças digite 5","\nPara sair digite 6")
     escolha=input("=> ")
