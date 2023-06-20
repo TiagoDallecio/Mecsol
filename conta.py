@@ -285,11 +285,11 @@ def calcular_forcas(nos, forcas, ligas):
         vetor_carga_nos[2 * no] = x
         vetor_carga_nos[2 * no + 1] = y
 
-    print(matriz_forcas)
+    
     print(num_nos)
     print(num_barras)
     matriz_forcas = np.where(np.abs(matriz_forcas) < 1e-10, 0, matriz_forcas)
-    print(matriz_forcas)
+    
 
     determinante = np.linalg.det(matriz_forcas)
 
