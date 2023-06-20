@@ -35,6 +35,7 @@ def main():
 
 
 def menu(): # menu de seleção de 'operações'
+    print("\n---Exibição e cálculo de treliças---\n\n")
     print("Para adicionar nós digite 1","\nPara ligar os nós existentes digite 2","\nPara adicionar forças digite 3",
           "\nPara opções de apoios digite 4","\nPara consultar as forças digite 5","\nPara sair digite 6")
     escolha=input("=> ")
@@ -143,12 +144,12 @@ def adiciona(escolha,nos,ligas): # função chamada pelo menu que executa a opç
         while continuar=="1":
             if len(nos) > 0: # validação da quantidade de nós presentes na lista
                 print("\nDigite 'sair' para voltar ao menu\n")
-                n=input("Escolha o nó em que deseja aplicar a força: ") #ver com o mauritz
+                n=input("Escolha o nó em que deseja aplicar a força: ") 
                 if n == 'sair':
                     break
                 f=input("Módulo da força: ")
                 theta=input("Ângulo de inclinação(em graus) da força com o eixo x: ")
-                s,d=input("Qual a direção e o sentido da força? (d,e)(c,b): ")
+                s,d=input("Qual é o sentido da força? (d,e)(c,b): ")
                 theta=float(theta)*(np.pi)/180 # conversão do angulo (graus para radianos)
                 if d=="c" and s=="d": # diferentes validações para determinar o sinal das forças
                     fx=float(f) *(np.cos(theta))
